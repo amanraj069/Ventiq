@@ -1,0 +1,256 @@
+@import "tailwindcss";
+
+/* ============================================================
+   Ventiq Design System — Semantic CSS Variables
+   Inspired by Linear / Mercury / Vercel dashboard aesthetics.
+   Every component references these vars — never hardcoded hex.
+   ============================================================ */
+
+/* ---------- Light Mode (default) ---------- */
+:root {
+  /* Backgrounds */
+  --color-bg: #fafafa;
+  --color-bg-elevated: #ffffff;
+  --color-bg-sunken: #f0f0f0;
+  --color-bg-overlay: rgba(0, 0, 0, 0.5);
+
+  /* Foreground / Text */
+  --color-fg: #0a0a0a;
+  --color-fg-secondary: #404040;
+  --color-fg-muted: #737373;
+  --color-fg-faint: #a3a3a3;
+  --color-fg-on-accent: #ffffff;
+
+  /* Borders */
+  --color-border: #e5e5e5;
+  --color-border-strong: #d4d4d4;
+  --color-border-focus: #0d9488;
+
+  /* Accent (Teal — professional, not playful) */
+  --color-accent: #0d9488;
+  --color-accent-hover: #0f766e;
+  --color-accent-subtle: rgba(13, 148, 136, 0.08);
+  --color-accent-foreground: #ffffff;
+
+  /* Semantic */
+  --color-success: #16a34a;
+  --color-success-subtle: rgba(22, 163, 74, 0.08);
+  --color-warning: #d97706;
+  --color-warning-subtle: rgba(217, 119, 6, 0.08);
+  --color-danger: #dc2626;
+  --color-danger-subtle: rgba(220, 38, 38, 0.08);
+  --color-info: #2563eb;
+  --color-info-subtle: rgba(37, 99, 235, 0.08);
+
+  /* Score Bands */
+  --color-score-excellent: #16a34a;
+  --color-score-good: #65a30d;
+  --color-score-average: #d97706;
+  --color-score-poor: #ea580c;
+  --color-score-bad: #dc2626;
+
+  /* Surfaces */
+  --color-card: #ffffff;
+  --color-card-hover: #fafafa;
+  --color-sidebar: #fafafa;
+  --color-topbar: rgba(255, 255, 255, 0.8);
+
+  /* Shadows */
+  --shadow-xs: 0 1px 2px rgba(0, 0, 0, 0.04);
+  --shadow-sm: 0 1px 3px rgba(0, 0, 0, 0.06), 0 1px 2px rgba(0, 0, 0, 0.04);
+  --shadow-md: 0 4px 6px rgba(0, 0, 0, 0.06), 0 2px 4px rgba(0, 0, 0, 0.04);
+  --shadow-lg: 0 10px 15px rgba(0, 0, 0, 0.06), 0 4px 6px rgba(0, 0, 0, 0.04);
+  --shadow-xl: 0 20px 25px rgba(0, 0, 0, 0.08), 0 8px 10px rgba(0, 0, 0, 0.04);
+
+  /* Radius */
+  --radius-sm: 6px;
+  --radius-md: 8px;
+  --radius-lg: 12px;
+  --radius-xl: 16px;
+  --radius-full: 9999px;
+
+  /* Transitions */
+  --ease-out-expo: cubic-bezier(0.16, 1, 0.3, 1);
+  --duration-fast: 150ms;
+  --duration-normal: 250ms;
+  --duration-slow: 400ms;
+}
+
+/* ---------- Dark Mode ---------- */
+.dark {
+  --color-bg: #09090b;
+  --color-bg-elevated: #131316;
+  --color-bg-sunken: #050506;
+  --color-bg-overlay: rgba(0, 0, 0, 0.7);
+
+  --color-fg: #f5f5f5;
+  --color-fg-secondary: #d4d4d4;
+  --color-fg-muted: #8b8b8b;
+  --color-fg-faint: #525252;
+  --color-fg-on-accent: #ffffff;
+
+  --color-border: #1e1e22;
+  --color-border-strong: #2e2e33;
+  --color-border-focus: #14b8a6;
+
+  --color-accent: #14b8a6;
+  --color-accent-hover: #2dd4bf;
+  --color-accent-subtle: rgba(20, 184, 166, 0.1);
+  --color-accent-foreground: #09090b;
+
+  --color-success: #22c55e;
+  --color-success-subtle: rgba(34, 197, 94, 0.1);
+  --color-warning: #f59e0b;
+  --color-warning-subtle: rgba(245, 158, 11, 0.1);
+  --color-danger: #ef4444;
+  --color-danger-subtle: rgba(239, 68, 68, 0.1);
+  --color-info: #3b82f6;
+  --color-info-subtle: rgba(59, 130, 246, 0.1);
+
+  --color-score-excellent: #22c55e;
+  --color-score-good: #84cc16;
+  --color-score-average: #f59e0b;
+  --color-score-poor: #f97316;
+  --color-score-bad: #ef4444;
+
+  --color-card: #131316;
+  --color-card-hover: #1a1a1e;
+  --color-sidebar: #0c0c0e;
+  --color-topbar: rgba(9, 9, 11, 0.8);
+
+  --shadow-xs: 0 1px 2px rgba(0, 0, 0, 0.2);
+  --shadow-sm: 0 1px 3px rgba(0, 0, 0, 0.3), 0 1px 2px rgba(0, 0, 0, 0.2);
+  --shadow-md: 0 4px 6px rgba(0, 0, 0, 0.3), 0 2px 4px rgba(0, 0, 0, 0.2);
+  --shadow-lg: 0 10px 15px rgba(0, 0, 0, 0.3), 0 4px 6px rgba(0, 0, 0, 0.2);
+  --shadow-xl: 0 20px 25px rgba(0, 0, 0, 0.35), 0 8px 10px rgba(0, 0, 0, 0.2);
+}
+
+/* ---------- Tailwind v4 Theme Extension ---------- */
+@theme inline {
+  /* Fonts */
+  --font-sans: var(--font-geist-sans);
+  --font-mono: var(--font-geist-mono);
+
+  /* Colors mapped to semantic vars */
+  --color-bg: var(--color-bg);
+  --color-bg-elevated: var(--color-bg-elevated);
+  --color-bg-sunken: var(--color-bg-sunken);
+
+  --color-fg: var(--color-fg);
+  --color-fg-secondary: var(--color-fg-secondary);
+  --color-fg-muted: var(--color-fg-muted);
+  --color-fg-faint: var(--color-fg-faint);
+
+  --color-border: var(--color-border);
+  --color-border-strong: var(--color-border-strong);
+
+  --color-accent: var(--color-accent);
+  --color-accent-hover: var(--color-accent-hover);
+  --color-accent-subtle: var(--color-accent-subtle);
+  --color-accent-foreground: var(--color-accent-foreground);
+
+  --color-success: var(--color-success);
+  --color-success-subtle: var(--color-success-subtle);
+  --color-warning: var(--color-warning);
+  --color-warning-subtle: var(--color-warning-subtle);
+  --color-danger: var(--color-danger);
+  --color-danger-subtle: var(--color-danger-subtle);
+  --color-info: var(--color-info);
+  --color-info-subtle: var(--color-info-subtle);
+
+  --color-card: var(--color-card);
+  --color-card-hover: var(--color-card-hover);
+  --color-sidebar: var(--color-sidebar);
+  --color-topbar: var(--color-topbar);
+
+  --color-score-excellent: var(--color-score-excellent);
+  --color-score-good: var(--color-score-good);
+  --color-score-average: var(--color-score-average);
+  --color-score-poor: var(--color-score-poor);
+  --color-score-bad: var(--color-score-bad);
+
+  /* Radius */
+  --radius-sm: var(--radius-sm);
+  --radius-md: var(--radius-md);
+  --radius-lg: var(--radius-lg);
+  --radius-xl: var(--radius-xl);
+  --radius-full: var(--radius-full);
+}
+
+/* ---------- Base Styles ---------- */
+*,
+*::before,
+*::after {
+  border-color: var(--color-border);
+}
+
+body {
+  background-color: var(--color-bg);
+  color: var(--color-fg);
+  font-family: var(--font-geist-sans), ui-sans-serif, system-ui, sans-serif;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+/* Tabular numbers for scores / data */
+.font-tabular {
+  font-variant-numeric: tabular-nums;
+  font-family: var(--font-geist-mono), ui-monospace, monospace;
+}
+
+/* Score ring animation */
+@keyframes score-fill {
+  from {
+    stroke-dashoffset: var(--score-circumference);
+  }
+  to {
+    stroke-dashoffset: var(--score-offset);
+  }
+}
+
+/* Fade + slide page transition */
+@keyframes fade-in-up {
+  from {
+    opacity: 0;
+    transform: translateY(8px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.animate-fade-in-up {
+  animation: fade-in-up var(--duration-normal) var(--ease-out-expo) both;
+}
+
+/* Focus ring utility */
+.focus-ring {
+  outline: none;
+}
+.focus-ring:focus-visible {
+  outline: 2px solid var(--color-border-focus);
+  outline-offset: 2px;
+}
+
+/* Scrollbar styling */
+::-webkit-scrollbar {
+  width: 6px;
+  height: 6px;
+}
+::-webkit-scrollbar-track {
+  background: transparent;
+}
+::-webkit-scrollbar-thumb {
+  background-color: var(--color-fg-faint);
+  border-radius: var(--radius-full);
+}
+::-webkit-scrollbar-thumb:hover {
+  background-color: var(--color-fg-muted);
+}
+
+/* Selection */
+::selection {
+  background-color: var(--color-accent-subtle);
+  color: var(--color-fg);
+}
