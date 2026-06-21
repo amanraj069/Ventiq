@@ -1,9 +1,9 @@
 export default () => ({
-  port: parseInt(process.env.PORT || '3001', 10),
+  port: parseInt(process.env.PORT || '9000', 10),
   nodeEnv: process.env.NODE_ENV || 'development',
 
   database: {
-    url: process.env.DATABASE_URL || 'postgresql://ventiq:ventiq_dev_password@localhost:5432/ventiq',
+    url: process.env.MONGO_URI || 'mongodb://localhost:27017/ventiq',
   },
 
   redis: {
