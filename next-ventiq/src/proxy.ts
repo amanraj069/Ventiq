@@ -17,7 +17,7 @@ export default auth((req) => {
   // Handle auth routes
   if (isAuthRoute) {
     if (isLoggedIn) {
-      return NextResponse.redirect(new URL('/dashboard', nextUrl));
+      return NextResponse.redirect(new URL('/ideas', nextUrl));
     }
     return NextResponse.next();
   }
@@ -38,7 +38,7 @@ export default auth((req) => {
     
     // If onboarding is complete and they try to access onboarding
     if (user?.onboardingComplete && isOnboardingRoute) {
-      return NextResponse.redirect(new URL('/dashboard', nextUrl));
+      return NextResponse.redirect(new URL('/ideas', nextUrl));
     }
   }
 

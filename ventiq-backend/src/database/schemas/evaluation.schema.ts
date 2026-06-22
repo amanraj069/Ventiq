@@ -16,9 +16,11 @@ export class Evaluation extends Document {
   @Prop({ type: Object })
   scoreBreakdown?: {
     market?: number;
-    product?: number;
     team?: number;
     traction?: number;
+    differentiation?: number;
+    scalability?: number;
+    clarity?: number;
   };
 
   @Prop()
@@ -29,6 +31,14 @@ export class Evaluation extends Document {
 
   @Prop({ type: [String] })
   weaknesses?: string[];
+
+  @Prop({ type: [{
+    agentName: String,
+    score: Number,
+    reasoning: String,
+    completedAt: Date
+  }] })
+  agentOutputs?: any[];
 }
 
 export const EvaluationSchema = SchemaFactory.createForClass(Evaluation);

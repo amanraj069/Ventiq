@@ -4,7 +4,7 @@ import { useState } from 'react';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 import { signIn } from 'next-auth/react';
-import { Card, Button, Input } from '@/components/ui';
+import { Card, Button, Input, BackButton } from '@/components/ui';
 
 export default function SignInPage() {
   const router = useRouter();
@@ -33,7 +33,7 @@ export default function SignInPage() {
         throw new Error('Invalid email or password');
       }
 
-      router.push('/dashboard'); // proxy will redirect to onboarding if needed
+      router.push('/ideas'); // proxy will redirect to onboarding if needed
       router.refresh();
     } catch (err: any) {
       setError(err.message);
@@ -44,7 +44,7 @@ export default function SignInPage() {
 
   const handleGoogleSignIn = async () => {
     setGoogleLoading(true);
-    await signIn('google', { callbackUrl: '/dashboard' });
+    await signIn('google', { callbackUrl: '/ideas' });
   };
 
   return (
@@ -58,11 +58,14 @@ export default function SignInPage() {
         </div>
 
         <Card className="p-8 shadow-lg">
-          <div className="text-center mb-8">
-            <h2 className="text-xl font-semibold text-fg">Welcome back</h2>
-            <p className="text-sm text-fg-secondary mt-1">
-              Sign in to your account to continue
-            </p>
+          <div className="flex items-center gap-3 mb-8">
+            <BackButton />
+            <div>
+              <h2 className="text-xl font-semibold text-fg">Welcome back</h2>
+              <p className="text-sm text-fg-secondary mt-1">
+                Sign in to your account to continue
+              </p>
+            </div>
           </div>
 
           {error && (
@@ -109,7 +112,7 @@ export default function SignInPage() {
             type="button"
             onClick={handleGoogleSignIn}
             disabled={googleLoading}
-            className="w-full flex items-center justify-center gap-3 h-10 px-4 rounded-[var(--radius-md)] border border-border bg-card hover:bg-card-hover text-fg text-sm font-medium transition-all duration-[var(--duration-fast)] active:scale-[0.98] focus-ring disabled:opacity-50"
+            className="w-full flex items-center justify-center gap-3 h-10 px-4 rounded-[var(--radius-md)] border border-border bg-card hover:bg-card-hover text-fg text-sm font-medium transition-all duration-[var(--duration-fast)] active:scale-[0.98] focus-ring disabled:opacity-50 cursor-pointer"
           >
             <svg viewBox="0 0 24 24" className="w-4 h-4" aria-hidden="true">
               <path

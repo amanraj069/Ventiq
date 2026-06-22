@@ -17,7 +17,7 @@ export const Textarea = forwardRef<HTMLTextAreaElement, TextareaProps>(
         {label && (
           <label
             htmlFor={textareaId}
-            className="text-sm font-medium text-fg-secondary"
+            className="text-sm font-medium text-fg-secondary cursor-pointer"
           >
             {label}
           </label>

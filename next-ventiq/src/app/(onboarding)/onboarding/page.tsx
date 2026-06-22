@@ -2,7 +2,7 @@
 
 import { useState } from 'react';
 import { useRouter } from 'next/navigation';
-import { Card, Button, Input, Textarea, Select, Badge } from '@/components/ui';
+import { Card, Button, Input, Textarea, Select, Badge, BackButton } from '@/components/ui';
 import { apiFetch } from '@/lib/api';
 
 export default function OnboardingPage() {
@@ -57,7 +57,7 @@ export default function OnboardingPage() {
       });
       // Force NextAuth session update by reloading or router refresh, 
       // then redirect to dashboard
-      window.location.href = '/dashboard';
+      window.location.href = '/ideas';
     } catch (err: any) {
       setError(err.message);
       setLoading(false);
@@ -80,7 +80,7 @@ export default function OnboardingPage() {
         method: 'POST',
         body: JSON.stringify(payload),
       });
-      window.location.href = '/dashboard';
+      window.location.href = '/ideas';
     } catch (err: any) {
       setError(err.message);
       setLoading(false);
@@ -106,7 +106,7 @@ export default function OnboardingPage() {
             <button
               onClick={() => handleSetRole('founder')}
               disabled={loading}
-              className="flex flex-col items-center p-8 border border-border rounded-[var(--radius-lg)] bg-card hover:border-accent hover:shadow-sm transition-all duration-200 text-left active:scale-[0.98] disabled:opacity-50"
+              className="flex flex-col items-center p-8 border border-border rounded-[var(--radius-lg)] bg-card hover:border-accent hover:shadow-sm transition-all duration-200 text-left active:scale-[0.98] disabled:opacity-50 cursor-pointer"
             >
               <div className="w-12 h-12 bg-accent-subtle text-accent rounded-full flex items-center justify-center mb-4">
                 <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" className="w-6 h-6">
@@ -122,7 +122,7 @@ export default function OnboardingPage() {
             <button
               onClick={() => handleSetRole('investor')}
               disabled={loading}
-              className="flex flex-col items-center p-8 border border-border rounded-[var(--radius-lg)] bg-card hover:border-success hover:shadow-sm transition-all duration-200 text-left active:scale-[0.98] disabled:opacity-50"
+              className="flex flex-col items-center p-8 border border-border rounded-[var(--radius-lg)] bg-card hover:border-success hover:shadow-sm transition-all duration-200 text-left active:scale-[0.98] disabled:opacity-50 cursor-pointer"
             >
               <div className="w-12 h-12 bg-success-subtle text-success rounded-full flex items-center justify-center mb-4">
                 <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" className="w-6 h-6">
@@ -139,13 +139,16 @@ export default function OnboardingPage() {
 
         {step === 'founder' && (
           <Card className="p-6">
-            <h2 className="text-xl font-semibold mb-6">Founder Profile</h2>
+            <div className="flex items-center gap-3 mb-6">
+              <BackButton onClick={() => setStep('role')} />
+              <h2 className="text-xl font-semibold">Founder Profile</h2>
+            </div>
             <form onSubmit={handleFounderSubmit} className="space-y-6">
               <Input
                 label="LinkedIn URL"
-                type="url"
+                type="text"
                 required
-                placeholder="https://linkedin.com/in/..."
+                placeholder="linkedin.com/in/your-profile"
                 value={founderForm.linkedinUrl}
                 onChange={(e) => setFounderForm({ ...founderForm, linkedinUrl: e.target.value })}
               />
@@ -179,8 +182,11 @@ export default function OnboardingPage() {
 
         {step === 'investor' && (
           <Card className="p-6">
-            <h2 className="text-xl font-semibold mb-2">Investor Verification</h2>
-            <p className="text-sm text-fg-muted mb-6">
+            <div className="flex items-center gap-3 mb-2">
+              <BackButton onClick={() => setStep('role')} />
+              <h2 className="text-xl font-semibold">Investor Verification</h2>
+            </div>
+            <p className="text-sm text-fg-muted mb-6 ml-[52px]">
               To protect founders, we verify all investor profiles.
             </p>
             <form onSubmit={handleInvestorSubmit} className="space-y-6">
@@ -222,9 +228,9 @@ export default function OnboardingPage() {
 
               <Input
                 label="LinkedIn URL"
-                type="url"
+                type="text"
                 required
-                placeholder="https://linkedin.com/in/..."
+                placeholder="linkedin.com/in/your-profile"
                 value={investorForm.linkedinUrl}
                 onChange={(e) => setInvestorForm({ ...investorForm, linkedinUrl: e.target.value })}
               />
