@@ -20,62 +20,64 @@ export class EvaluationProcessor extends WorkerHost {
   }
 
   async process(job: Job<any, any, string>): Promise<any> {
-    this.logger.log(`Processing job ${job.id} of type ${job.name} with data: ${JSON.stringify(job.data)}`);
+    this.logger.log(`Processing job ${job.id} of type ${job.name}`);
 
     if (job.name === 'evaluate-idea') {
       const { ideaId } = job.data;
-      
+
       const idea = await this.ideaModel.findOne({ ideaId });
       if (!idea) {
         this.logger.error(`Idea not found: ${ideaId}`);
         throw new Error('Idea not found');
       }
 
-      // Step 1: Create Evaluation document if it doesn't exist
-      let evaluation = await this.evaluationModel.findOne({ ideaId });
-      if (!evaluation) {
-        evaluation = new this.evaluationModel({
-          ideaId,
-          status: 'evaluating',
-          overallScore: 0,
-          scoreBreakdown: {},
-          agentOutputs: [],
-        });
-        await evaluation.save();
-      }
+      // Determine version — count existing evaluations for this idea
+      const existingCount = await this.evaluationModel.countDocuments({ ideaId });
+      const newVersion = existingCount + 1;
 
-      // Step 2: Run Market Research Agent
-      const marketOutput = await this.marketResearchAgent.evaluate(idea);
-      
-      // Step 3: Update Evaluation
-      if (!evaluation.agentOutputs) {
-        evaluation.agentOutputs = [];
-      }
-      evaluation.agentOutputs.push({
-        agentName: 'MarketResearch',
-        score: marketOutput.score,
-        reasoning: marketOutput.reasoning,
-        completedAt: new Date(),
+      // Create new Evaluation document
+      const evaluation = new this.evaluationModel({
+        ideaId,
+        version: newVersion,
+        overallScore: 0,
+        scoreBreakdown: {},
+        agentOutputs: [],
       });
-      
-      evaluation.scoreBreakdown = {
-        ...evaluation.scoreBreakdown,
-        market: marketOutput.score,
-      };
-      
-      // Simple aggregation for now (just one agent)
-      evaluation.overallScore = marketOutput.score;
-      evaluation.summary = marketOutput.reasoning;
-      evaluation.strengths = marketOutput.strengths;
-      evaluation.weaknesses = marketOutput.weaknesses;
+      await evaluation.save();
+
+      // Update idea status
+      idea.status = 'submitted';
+      await idea.save();
+
+      // Run the comprehensive MarketResearch agent
+      const output = await this.marketResearchAgent.evaluate(idea);
+
+      // Populate all fields from agent output
+      evaluation.overallScore = output.overallScore;
+      evaluation.scoreBreakdown = output.scoreBreakdown;
+      evaluation.summary = output.summary;
+      evaluation.strengths = output.strengths;
+      evaluation.weaknesses = output.weaknesses;
+      evaluation.competitorLandscape = output.competitorLandscape;
+      evaluation.financialProjection = output.financialProjection;
+      evaluation.redTeamCritique = output.redTeamCritique;
+
+      evaluation.agentOutputs = [{
+        agentName: 'MarketResearch',
+        score: output.overallScore,
+        reasoning: output.summary,
+        strengths: output.strengths,
+        weaknesses: output.weaknesses,
+        completedAt: new Date(),
+      }];
 
       await evaluation.save();
 
-      // Step 4: Update Idea status
+      // Mark idea as evaluated
       idea.status = 'evaluated';
       await idea.save();
 
-      this.logger.log(`Completed evaluation for idea: ${ideaId}`);
+      this.logger.log(`Completed evaluation v${newVersion} for idea: ${ideaId} — score: ${output.overallScore}`);
       return evaluation;
     }
   }

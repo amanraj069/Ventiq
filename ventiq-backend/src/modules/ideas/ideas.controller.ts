@@ -23,4 +23,9 @@ export class IdeasController {
   async findOne(@CurrentUser('id') userId: string, @Param('id') ideaId: string) {
     return this.ideasService.findOne(ideaId, userId);
   }
+
+  @Post(':id/re-evaluate')
+  async reEvaluate(@CurrentUser('id') userId: string, @Param('id') ideaId: string) {
+    return this.ideasService.reEvaluate(ideaId, userId);
+  }
 }

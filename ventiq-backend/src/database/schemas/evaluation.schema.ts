@@ -10,6 +10,9 @@ export class Evaluation extends Document {
   @Prop({ required: true })
   ideaId: string;
 
+  @Prop({ type: Number, default: 1 })
+  version: number;
+
   @Prop({ type: Number })
   overallScore?: number;
 
@@ -36,9 +39,49 @@ export class Evaluation extends Document {
     agentName: String,
     score: Number,
     reasoning: String,
-    completedAt: Date
+    strengths: [String],
+    weaknesses: [String],
+    completedAt: Date,
   }] })
-  agentOutputs?: any[];
+  agentOutputs?: {
+    agentName: string;
+    score: number;
+    reasoning: string;
+    strengths: string[];
+    weaknesses: string[];
+    completedAt: Date;
+  }[];
+
+  @Prop({ type: [{
+    name: String,
+    description: String,
+    threatLevel: String,
+  }] })
+  competitorLandscape?: {
+    name: string;
+    description: string;
+    threatLevel: 'low' | 'medium' | 'high';
+  }[];
+
+  @Prop({ type: Object })
+  financialProjection?: {
+    summary: string;
+    yearOneRevenue: string;
+    yearThreeRevenue: string;
+    breakEvenMonths: number;
+  };
+
+  @Prop({ type: Object })
+  redTeamCritique?: {
+    summary: string;
+    criticalRisks: string[];
+  };
+
+  @Prop({ type: Date })
+  supersededAt?: Date;
+
+  createdAt?: Date;
+  updatedAt?: Date;
 }
 
 export const EvaluationSchema = SchemaFactory.createForClass(Evaluation);

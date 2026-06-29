@@ -20,6 +20,24 @@ export class EvaluationService {
   }
 
   async getEvaluationByIdeaId(ideaId: string): Promise<Evaluation | null> {
-    return this.evaluationModel.findOne({ ideaId }).exec();
+    // Return the latest non-superseded evaluation
+    return this.evaluationModel
+      .findOne({ ideaId, supersededAt: { $exists: false } })
+      .sort({ version: -1 })
+      .exec();
+  }
+
+  async getEvaluationHistory(ideaId: string): Promise<Evaluation[]> {
+    return this.evaluationModel
+      .find({ ideaId })
+      .sort({ version: -1 })
+      .exec();
+  }
+
+  async supersedeCurrent(ideaId: string): Promise<void> {
+    await this.evaluationModel.updateMany(
+      { ideaId, supersededAt: { $exists: false } },
+      { $set: { supersededAt: new Date() } },
+    );
   }
 }
