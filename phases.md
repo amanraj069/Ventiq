@@ -47,15 +47,15 @@
 
 ---
 
-## Phase 4: Score Breakdown Page
-- [ ] Render full agent output on `/ideas/[ideaId]`
-- [ ] Radar chart for multi-dimensional scoring
-- [ ] Individual agent cards with reasoning text
-- [ ] Score ring animation (SVG stroke-dashoffset)
-- [ ] Financial projection graph placeholder
-- [ ] Competitor landscape section
-- [ ] Red-Team critique section (visually distinct)
-- [ ] Score history / versioning (if idea is re-submitted)
+## Phase 4: Score Breakdown Page ✅
+- [x] Render full agent output on `/ideas/[ideaId]`
+- [x] Radar chart for multi-dimensional scoring
+- [x] Individual agent cards with reasoning text
+- [x] Score ring animation (SVG stroke-dashoffset)
+- [x] Financial projection graph placeholder
+- [x] Competitor landscape section
+- [x] Red-Team critique section (visually distinct)
+- [x] Score history / versioning (if idea is re-submitted)
 
 ---
 

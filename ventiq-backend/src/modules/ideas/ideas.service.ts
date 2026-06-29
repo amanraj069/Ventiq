@@ -1,4 +1,4 @@
-import { Injectable, Logger } from '@nestjs/common';
+import { Injectable, Logger, NotFoundException } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
 import { Model } from 'mongoose';
 import { Idea } from '../../database/schemas/idea.schema';
@@ -40,10 +40,38 @@ export class IdeasService {
     }
 
     const evaluation = await this.evaluationService.getEvaluationByIdeaId(ideaId);
+    const history = await this.evaluationService.getEvaluationHistory(ideaId);
 
     return {
       ...idea,
       evaluation: evaluation ? evaluation.toJSON() : null,
+      evaluationHistory: history.map((e) => ({
+        evaluationId: e.evaluationId,
+        version: e.version,
+        overallScore: e.overallScore,
+        createdAt: e.createdAt,
+        supersededAt: e.supersededAt,
+      })),
     };
+  }
+
+  async reEvaluate(ideaId: string, founderId: string): Promise<{ message: string }> {
+    const idea = await this.ideaModel.findOne({ ideaId, founderId });
+    if (!idea) {
+      throw new NotFoundException('Idea not found');
+    }
+
+    // Supersede current evaluation(s)
+    await this.evaluationService.supersedeCurrent(ideaId);
+
+    // Reset idea status
+    idea.status = 'submitted';
+    await idea.save();
+
+    // Trigger new evaluation
+    await this.evaluationService.triggerEvaluation(ideaId);
+
+    this.logger.log(`Re-evaluation triggered for idea: ${ideaId}`);
+    return { message: 'Re-evaluation started' };
   }
 }
