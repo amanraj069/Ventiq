@@ -77,6 +77,27 @@ export class Evaluation extends Document {
     criticalRisks: string[];
   };
 
+  @Prop({ type: String })
+  rubricVersion?: string;
+
+  @Prop({ type: [String] })
+  appliedCeilings?: string[];
+
+  @Prop({ type: Object })
+  tokenUsage?: {
+    totalInputTokens: number;
+    totalOutputTokens: number;
+    perAgent: {
+      agentName: string;
+      inputTokens: number;
+      outputTokens: number;
+      durationMs: number;
+    }[];
+  };
+
+  @Prop({ type: Number })
+  totalDurationMs?: number;
+
   @Prop({ type: Date })
   supersededAt?: Date;
 

@@ -59,21 +59,21 @@
 
 ---
 
-## Phase 5: Full Agent Set + LangGraph Orchestration
-- [ ] LangGraph state graph definition
-- [ ] Market Research Agent
-- [ ] Differentiation Agent (depends on Market Research)
-- [ ] Financial Model Agent
-- [ ] Team Fit Agent
-- [ ] Traction Agent
-- [ ] Clarity Agent
-- [ ] Regulatory Agent
-- [ ] Red-Team Agent (depends on all other agents)
-- [ ] Scoring Critic Agent (applies ceiling logic)
-- [ ] Versioned rubric as JSON config (`rubric/v1.json`)
-- [ ] Parallel execution where possible
-- [ ] Per-agent token usage + duration logging
-- [ ] Idea similarity/dedup via embeddings (Pinecone or pgvector)
+## Phase 5: Full Agent Set + LangGraph Orchestration ✅
+- [x] LangGraph state graph definition
+- [x] Market Research Agent
+- [x] Differentiation Agent (depends on Market Research)
+- [x] Financial Model Agent
+- [x] Team Fit Agent
+- [x] Traction Agent
+- [x] Clarity Agent
+- [x] Regulatory Agent
+- [x] Red-Team Agent (depends on all other agents)
+- [x] Scoring Critic Agent (applies ceiling logic)
+- [x] Versioned rubric as JSON config (`rubric/v1.json`)
+- [x] Parallel execution where possible
+- [x] Per-agent token usage + duration logging
+- [x] Idea similarity/dedup via embeddings (Pinecone or pgvector)
 
 ---
 

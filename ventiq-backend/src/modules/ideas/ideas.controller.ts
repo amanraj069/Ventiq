@@ -14,6 +14,11 @@ export class IdeasController {
     return this.ideasService.create(userId, createIdeaDto);
   }
 
+  @Post('similarity-check')
+  async checkSimilarity(@Body('text') text: string) {
+    return this.ideasService.findSimilar(text, 3);
+  }
+
   @Get()
   async findAll(@CurrentUser('id') userId: string) {
     return this.ideasService.findAllByFounder(userId);
