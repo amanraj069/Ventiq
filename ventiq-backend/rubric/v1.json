@@ -1,0 +1,44 @@
+{
+  "version": "v1",
+  "description": "Ventiq Startup Evaluation Rubric — Version 1",
+  "dimensions": {
+    "market": { "weight": 0.25, "label": "Market Potential", "agentName": "MarketResearch" },
+    "differentiation": { "weight": 0.20, "label": "Differentiation", "agentName": "Differentiation" },
+    "team": { "weight": 0.15, "label": "Team Fit", "agentName": "TeamFit" },
+    "traction": { "weight": 0.15, "label": "Traction", "agentName": "Traction" },
+    "scalability": { "weight": 0.15, "label": "Scalability", "agentName": "FinancialModel" },
+    "clarity": { "weight": 0.10, "label": "Clarity", "agentName": "Clarity" }
+  },
+  "ceilingRules": [
+    {
+      "id": "no-traction-cap",
+      "description": "Idea-only stage with no traction caps overall at 60",
+      "condition": { "field": "tractionStatus", "equals": "Idea-only" },
+      "cap": 60
+    },
+    {
+      "id": "no-tech-founder-cap",
+      "description": "No technical co-founder caps team dimension at 70",
+      "condition": { "field": "hasTechnicalFounder", "equals": "no" },
+      "dimensionCap": { "team": 70 }
+    },
+    {
+      "id": "solo-founder-cap",
+      "description": "Solo founder (0 co-founders) caps team dimension at 65",
+      "condition": { "field": "coFoundersCount", "equals": 0 },
+      "dimensionCap": { "team": 65 }
+    },
+    {
+      "id": "no-description-penalty",
+      "description": "Missing or very short description caps clarity at 50",
+      "condition": { "field": "description", "maxLength": 30 },
+      "dimensionCap": { "clarity": 50 }
+    },
+    {
+      "id": "high-risk-red-team",
+      "description": "If red-team identifies 4+ critical risks, cap overall at 70",
+      "condition": { "field": "_redTeamRiskCount", "gte": 4 },
+      "cap": 70
+    }
+  ]
+}

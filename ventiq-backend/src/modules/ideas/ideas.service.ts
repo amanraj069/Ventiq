@@ -4,6 +4,7 @@ import { Model } from 'mongoose';
 import { Idea } from '../../database/schemas/idea.schema';
 import { CreateIdeaDto } from './dto/create-idea.dto';
 import { EvaluationService } from '../evaluation/evaluation.service';
+import { PineconeService } from '../pinecone/pinecone.service';
 
 @Injectable()
 export class IdeasService {
@@ -12,6 +13,7 @@ export class IdeasService {
   constructor(
     @InjectModel(Idea.name) private ideaModel: Model<Idea>,
     private evaluationService: EvaluationService,
+    private pineconeService: PineconeService,
   ) {}
 
   async create(founderId: string, createIdeaDto: CreateIdeaDto): Promise<Idea> {
@@ -25,6 +27,15 @@ export class IdeasService {
     
     // Trigger the BullMQ job for async evaluation
     await this.evaluationService.triggerEvaluation(newIdea.ideaId);
+
+    // Asynchronously upsert to Pinecone for similarity search
+    const textForEmbedding = `Title: ${newIdea.title}. Pitch: ${newIdea.oneLinePitch}. Description: ${newIdea.description}. Domain: ${newIdea.domain}. Target Market: ${newIdea.targetMarket}`;
+    this.pineconeService.upsertIdea(newIdea.ideaId, textForEmbedding, {
+      founderId,
+      title: newIdea.title,
+    }).catch(err => {
+      this.logger.error(`Failed to trigger pinecone upsert for idea ${newIdea.ideaId}`, err);
+    });
 
     return newIdea;
   }
@@ -73,5 +84,17 @@ export class IdeasService {
 
     this.logger.log(`Re-evaluation triggered for idea: ${ideaId}`);
     return { message: 'Re-evaluation started' };
+  }
+
+  async findSimilar(text: string, topK: number = 3) {
+    if (!text || text.trim().length === 0) {
+      return [];
+    }
+    
+    // We only need the Pinecone query
+    const similarMatches = await this.pineconeService.findSimilar(text, topK);
+    
+    // Optionally fetch full idea details from DB, but metadata has title
+    return similarMatches;
   }
 }

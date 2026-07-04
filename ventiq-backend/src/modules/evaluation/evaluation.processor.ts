@@ -5,7 +5,7 @@ import { InjectModel } from '@nestjs/mongoose';
 import { Model } from 'mongoose';
 import { Idea } from '../../database/schemas/idea.schema';
 import { Evaluation } from '../../database/schemas/evaluation.schema';
-import { MarketResearchAgent } from './agents/market-research.agent';
+import { PipelineOrchestrator } from './pipeline.orchestrator';
 
 @Processor('evaluation-queue')
 export class EvaluationProcessor extends WorkerHost {
@@ -14,7 +14,7 @@ export class EvaluationProcessor extends WorkerHost {
   constructor(
     @InjectModel(Idea.name) private ideaModel: Model<Idea>,
     @InjectModel(Evaluation.name) private evaluationModel: Model<Evaluation>,
-    private marketResearchAgent: MarketResearchAgent,
+    private pipelineOrchestrator: PipelineOrchestrator,
   ) {
     super();
   }
@@ -31,11 +31,11 @@ export class EvaluationProcessor extends WorkerHost {
         throw new Error('Idea not found');
       }
 
-      // Determine version — count existing evaluations for this idea
+      // Determine version
       const existingCount = await this.evaluationModel.countDocuments({ ideaId });
       const newVersion = existingCount + 1;
 
-      // Create new Evaluation document
+      // Create placeholder evaluation document
       const evaluation = new this.evaluationModel({
         ideaId,
         version: newVersion,
@@ -45,31 +45,37 @@ export class EvaluationProcessor extends WorkerHost {
       });
       await evaluation.save();
 
-      // Update idea status
+      // Update idea status to evaluating
       idea.status = 'submitted';
       await idea.save();
 
-      // Run the comprehensive MarketResearch agent
-      const output = await this.marketResearchAgent.evaluate(idea);
+      // ── Run the full agent pipeline ──
+      this.logger.log(`🚀 Starting evaluation pipeline v${newVersion} for idea: ${ideaId}`);
+      const pipelineResult = await this.pipelineOrchestrator.run(idea);
 
-      // Populate all fields from agent output
-      evaluation.overallScore = output.overallScore;
-      evaluation.scoreBreakdown = output.scoreBreakdown;
-      evaluation.summary = output.summary;
-      evaluation.strengths = output.strengths;
-      evaluation.weaknesses = output.weaknesses;
-      evaluation.competitorLandscape = output.competitorLandscape;
-      evaluation.financialProjection = output.financialProjection;
-      evaluation.redTeamCritique = output.redTeamCritique;
+      // Populate all fields from the pipeline result
+      evaluation.overallScore = pipelineResult.overallScore;
+      evaluation.scoreBreakdown = pipelineResult.scoreBreakdown;
+      evaluation.summary = pipelineResult.summary;
+      evaluation.strengths = pipelineResult.strengths;
+      evaluation.weaknesses = pipelineResult.weaknesses;
+      evaluation.competitorLandscape = pipelineResult.competitorLandscape;
+      evaluation.financialProjection = pipelineResult.financialProjection;
+      evaluation.redTeamCritique = pipelineResult.redTeamCritique;
+      evaluation.rubricVersion = pipelineResult.rubricVersion;
+      evaluation.appliedCeilings = pipelineResult.appliedCeilings;
+      evaluation.tokenUsage = pipelineResult.tokenUsage;
+      evaluation.totalDurationMs = pipelineResult.totalDurationMs;
 
-      evaluation.agentOutputs = [{
-        agentName: 'MarketResearch',
-        score: output.overallScore,
-        reasoning: output.summary,
-        strengths: output.strengths,
-        weaknesses: output.weaknesses,
+      // Map agent outputs to schema format
+      evaluation.agentOutputs = pipelineResult.agentOutputs.map((o) => ({
+        agentName: o.agentName,
+        score: o.score,
+        reasoning: o.reasoning,
+        strengths: o.strengths,
+        weaknesses: o.weaknesses,
         completedAt: new Date(),
-      }];
+      }));
 
       await evaluation.save();
 
@@ -77,7 +83,9 @@ export class EvaluationProcessor extends WorkerHost {
       idea.status = 'evaluated';
       await idea.save();
 
-      this.logger.log(`Completed evaluation v${newVersion} for idea: ${ideaId} — score: ${output.overallScore}`);
+      this.logger.log(
+        `✅ Evaluation v${newVersion} complete for ${ideaId} — Score: ${pipelineResult.overallScore}/100 in ${pipelineResult.totalDurationMs}ms`,
+      );
       return evaluation;
     }
   }

@@ -16,10 +16,12 @@ interface AgentCardProps {
 const AGENT_DISPLAY: Record<string, { label: string; icon: string; color: string }> = {
   MarketResearch: { label: 'Market Research', icon: '📊', color: 'from-purple-500/20 to-blue-500/20' },
   Differentiation: { label: 'Differentiation', icon: '💎', color: 'from-cyan-500/20 to-teal-500/20' },
-  Financial: { label: 'Financial Model', icon: '💰', color: 'from-green-500/20 to-emerald-500/20' },
+  FinancialModel: { label: 'Financial Model', icon: '💰', color: 'from-green-500/20 to-emerald-500/20' },
   TeamFit: { label: 'Team Fit', icon: '👥', color: 'from-orange-500/20 to-amber-500/20' },
   Traction: { label: 'Traction', icon: '🚀', color: 'from-pink-500/20 to-rose-500/20' },
   Clarity: { label: 'Clarity', icon: '🎯', color: 'from-indigo-500/20 to-violet-500/20' },
+  Regulatory: { label: 'Regulatory', icon: '⚖️', color: 'from-slate-500/20 to-zinc-500/20' },
+  RedTeam: { label: 'Red-Team', icon: '🔴', color: 'from-red-500/20 to-orange-500/20' },
 };
 
 export function AgentCard({ agentName, score, reasoning, strengths = [], weaknesses = [], completedAt }: AgentCardProps) {
