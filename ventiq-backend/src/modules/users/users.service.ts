@@ -154,4 +154,49 @@ export class UsersService {
       investorProfile: updated.investorProfile,
     };
   }
+
+  /**
+   * Admin: Get all pending investor verifications.
+   */
+  async getPendingInvestors() {
+    const users = await this.userModel
+      .find({ role: 'investor', investorVerificationStatus: 'pending' })
+      .sort({ createdAt: -1 })
+      .lean()
+      .exec();
+
+    return users.map((u) => ({
+      userId: u.userId,
+      name: u.name,
+      email: u.email,
+      picture: u.picture,
+      investorProfile: u.investorProfile,
+      investorVerificationStatus: u.investorVerificationStatus,
+      createdAt: u.createdAt,
+    }));
+  }
+
+  /**
+   * Admin: Approve or reject investor verification.
+   */
+  async verifyInvestor(userId: string, approved: boolean) {
+    const user = await this.userModel.findOne({ userId }).exec();
+    if (!user) {
+      throw new NotFoundException('User not found');
+    }
+    if (user.role !== 'investor') {
+      throw new BadRequestException('User is not an investor');
+    }
+
+    user.investorVerificationStatus = approved ? 'verified' : 'rejected';
+    await user.save();
+
+    this.logger.log(`Investor ${user.email} ${approved ? 'verified' : 'rejected'}`);
+    return {
+      userId: user.userId,
+      name: user.name,
+      email: user.email,
+      investorVerificationStatus: user.investorVerificationStatus,
+    };
+  }
 }

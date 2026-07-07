@@ -13,6 +13,8 @@ const ideas_controller_1 = require("./ideas.controller");
 const ideas_service_1 = require("./ideas.service");
 const idea_schema_1 = require("../../database/schemas/idea.schema");
 const evaluation_module_1 = require("../evaluation/evaluation.module");
+const pinecone_module_1 = require("../pinecone/pinecone.module");
+const interest_module_1 = require("../interest/interest.module");
 let IdeasModule = class IdeasModule {
 };
 exports.IdeasModule = IdeasModule;
@@ -21,6 +23,8 @@ exports.IdeasModule = IdeasModule = __decorate([
         imports: [
             mongoose_1.MongooseModule.forFeature([{ name: idea_schema_1.Idea.name, schema: idea_schema_1.IdeaSchema }]),
             evaluation_module_1.EvaluationModule,
+            pinecone_module_1.PineconeModule,
+            interest_module_1.InterestModule,
         ],
         controllers: [ideas_controller_1.IdeasController],
         providers: [ideas_service_1.IdeasService],

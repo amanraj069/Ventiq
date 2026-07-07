@@ -18,6 +18,7 @@ const app_controller_1 = require("./app.controller");
 const app_service_1 = require("./app.service");
 const bullmq_1 = require("@nestjs/bullmq");
 const evaluation_module_1 = require("./modules/evaluation/evaluation.module");
+const interest_module_1 = require("./modules/interest/interest.module");
 let AppModule = class AppModule {
 };
 exports.AppModule = AppModule;
@@ -46,6 +47,7 @@ exports.AppModule = AppModule = __decorate([
             users_module_1.UsersModule,
             ideas_module_1.IdeasModule,
             evaluation_module_1.EvaluationModule,
+            interest_module_1.InterestModule,
         ],
         controllers: [app_controller_1.AppController],
         providers: [app_service_1.AppService],

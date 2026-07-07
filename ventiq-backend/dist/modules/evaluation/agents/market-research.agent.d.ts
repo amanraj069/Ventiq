@@ -1,13 +1,7 @@
 import { ConfigService } from '@nestjs/config';
-export declare class MarketResearchAgent {
-    private configService;
-    private readonly logger;
-    private model;
+import { BaseEvaluationAgent, AgentOutput, PriorResults } from './base-agent';
+export declare class MarketResearchAgent extends BaseEvaluationAgent {
     constructor(configService: ConfigService);
-    evaluate(idea: any): Promise<{
-        score: number;
-        reasoning: string;
-        strengths: string[];
-        weaknesses: string[];
-    }>;
+    getAgentName(): string;
+    protected evaluate(idea: any, _priorResults?: PriorResults): Promise<AgentOutput>;
 }

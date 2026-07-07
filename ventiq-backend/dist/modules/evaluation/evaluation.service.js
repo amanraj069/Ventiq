@@ -33,7 +33,19 @@ let EvaluationService = EvaluationService_1 = class EvaluationService {
         await this.evaluationQueue.add('evaluate-idea', { ideaId });
     }
     async getEvaluationByIdeaId(ideaId) {
-        return this.evaluationModel.findOne({ ideaId }).exec();
+        return this.evaluationModel
+            .findOne({ ideaId, supersededAt: { $exists: false } })
+            .sort({ version: -1 })
+            .exec();
+    }
+    async getEvaluationHistory(ideaId) {
+        return this.evaluationModel
+            .find({ ideaId })
+            .sort({ version: -1 })
+            .exec();
+    }
+    async supersedeCurrent(ideaId) {
+        await this.evaluationModel.updateMany({ ideaId, supersededAt: { $exists: false } }, { $set: { supersededAt: new Date() } });
     }
 };
 exports.EvaluationService = EvaluationService;

@@ -8,4 +8,6 @@ export declare class EvaluationService {
     constructor(evaluationQueue: Queue, evaluationModel: Model<Evaluation>);
     triggerEvaluation(ideaId: string): Promise<void>;
     getEvaluationByIdeaId(ideaId: string): Promise<Evaluation | null>;
+    getEvaluationHistory(ideaId: string): Promise<Evaluation[]>;
+    supersedeCurrent(ideaId: string): Promise<void>;
 }

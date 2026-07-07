@@ -77,35 +77,35 @@
 
 ---
 
-## Phase 6: Investor Explore / Interest / Approval Flow
-- [ ] Backend: `InterestModule` (express interest, approve, decline)
-- [ ] `/explore` — Investor discovery feed with filters
-- [ ] `/explore/[ideaId]` — Investor-facing idea view (gated breakdown)
-- [ ] "Express Interest" CTA + pending/approved states
-- [ ] `/interests` — Investor's interest tracker
-- [ ] `/ideas/[ideaId]/interest` — Founder's interest inbox
-- [ ] Approve/Decline flow unlocks full breakdown for investor
-- [ ] Verified investor guard on explore routes
-- [ ] Admin panel for investor verification approval
+## Phase 6: Investor Explore / Interest / Approval Flow ✅
+- [x] Backend: `InterestModule` (express interest, approve, decline)
+- [x] `/explore` — Investor discovery feed with filters
+- [x] `/explore/[ideaId]` — Investor-facing idea view (gated breakdown)
+- [x] "Express Interest" CTA + pending/approved states
+- [x] `/interests` — Investor's interest tracker
+- [x] `/ideas/[ideaId]/interest` — Founder's interest inbox
+- [x] Approve/Decline flow unlocks full breakdown for investor
+- [x] Verified investor guard on explore routes
+- [x] Admin panel for investor verification approval
 
 ---
 
 ## Phase 7: Theming, Motion Polish, Landing Page
-- [ ] ThemeProvider + ThemeToggle (`@theme-toggles/react` Classic)
-- [ ] CSS variable-based color system (semantic tokens)
-- [ ] Dark/light mode with FOUC prevention
-- [ ] Framer Motion page transitions + micro-interactions
-- [ ] Landing page hero (asymmetric, real product preview)
-- [ ] "How scoring works" agent pipeline diagram
-- [ ] Dual-path section (For Founders / For Investors)
-- [ ] Sample score breakdown (interactive, no login required)
-- [ ] Pricing teaser section
-- [ ] `/how-it-works` page
-- [ ] `/pricing` page
-- [ ] `/for-investors` page
-- [ ] `/about`, `/legal/privacy`, `/legal/terms` pages
-- [ ] App shell: Sidebar + topbar + mobile nav
-- [ ] Role-aware dashboard (`/dashboard`)
+- [x] ThemeProvider + ThemeToggle (`@theme-toggles/react` Classic)
+- [x] CSS variable-based color system (semantic tokens)
+- [x] Dark/light mode with FOUC prevention
+- [x] Framer Motion page transitions + micro-interactions
+- [x] Landing page hero (asymmetric, real product preview)
+- [x] "How scoring works" agent pipeline diagram
+- [x] Dual-path section (For Founders / For Investors)
+- [x] Sample score breakdown (interactive, no login required)
+- [x] Pricing teaser section
+- [x] `/how-it-works` page
+- [x] `/pricing` page
+- [x] `/for-investors` page
+- [x] `/about`, `/legal/privacy`, `/legal/terms` pages
+- [x] App shell: Sidebar + topbar + mobile nav
+- [x] Role-aware dashboard (`/dashboard`)
 
 ---
 

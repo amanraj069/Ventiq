@@ -55,7 +55,7 @@ __decorate([
     __metadata("design:type", String)
 ], User.prototype, "picture", void 0);
 __decorate([
-    (0, mongoose_1.Prop)({ enum: ['founder', 'investor', null], default: null }),
+    (0, mongoose_1.Prop)({ enum: ['founder', 'investor', 'admin', null], default: null }),
     __metadata("design:type", String)
 ], User.prototype, "role", void 0);
 __decorate([

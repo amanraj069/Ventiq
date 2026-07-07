@@ -16,12 +16,23 @@ const uuid_1 = require("uuid");
 let Evaluation = class Evaluation extends mongoose_2.Document {
     evaluationId;
     ideaId;
+    version;
     overallScore;
     scoreBreakdown;
     summary;
     strengths;
     weaknesses;
     agentOutputs;
+    competitorLandscape;
+    financialProjection;
+    redTeamCritique;
+    rubricVersion;
+    appliedCeilings;
+    tokenUsage;
+    totalDurationMs;
+    supersededAt;
+    createdAt;
+    updatedAt;
 };
 exports.Evaluation = Evaluation;
 __decorate([
@@ -32,6 +43,10 @@ __decorate([
     (0, mongoose_1.Prop)({ required: true }),
     __metadata("design:type", String)
 ], Evaluation.prototype, "ideaId", void 0);
+__decorate([
+    (0, mongoose_1.Prop)({ type: Number, default: 1 }),
+    __metadata("design:type", Number)
+], Evaluation.prototype, "version", void 0);
 __decorate([
     (0, mongoose_1.Prop)({ type: Number }),
     __metadata("design:type", Number)
@@ -57,10 +72,48 @@ __decorate([
                 agentName: String,
                 score: Number,
                 reasoning: String,
-                completedAt: Date
+                strengths: [String],
+                weaknesses: [String],
+                completedAt: Date,
             }] }),
     __metadata("design:type", Array)
 ], Evaluation.prototype, "agentOutputs", void 0);
+__decorate([
+    (0, mongoose_1.Prop)({ type: [{
+                name: String,
+                description: String,
+                threatLevel: String,
+            }] }),
+    __metadata("design:type", Array)
+], Evaluation.prototype, "competitorLandscape", void 0);
+__decorate([
+    (0, mongoose_1.Prop)({ type: Object }),
+    __metadata("design:type", Object)
+], Evaluation.prototype, "financialProjection", void 0);
+__decorate([
+    (0, mongoose_1.Prop)({ type: Object }),
+    __metadata("design:type", Object)
+], Evaluation.prototype, "redTeamCritique", void 0);
+__decorate([
+    (0, mongoose_1.Prop)({ type: String }),
+    __metadata("design:type", String)
+], Evaluation.prototype, "rubricVersion", void 0);
+__decorate([
+    (0, mongoose_1.Prop)({ type: [String] }),
+    __metadata("design:type", Array)
+], Evaluation.prototype, "appliedCeilings", void 0);
+__decorate([
+    (0, mongoose_1.Prop)({ type: Object }),
+    __metadata("design:type", Object)
+], Evaluation.prototype, "tokenUsage", void 0);
+__decorate([
+    (0, mongoose_1.Prop)({ type: Number }),
+    __metadata("design:type", Number)
+], Evaluation.prototype, "totalDurationMs", void 0);
+__decorate([
+    (0, mongoose_1.Prop)({ type: Date }),
+    __metadata("design:type", Date)
+], Evaluation.prototype, "supersededAt", void 0);
 exports.Evaluation = Evaluation = __decorate([
     (0, mongoose_1.Schema)({ timestamps: true })
 ], Evaluation);

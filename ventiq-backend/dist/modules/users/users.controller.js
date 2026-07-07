@@ -18,6 +18,7 @@ const passport_1 = require("@nestjs/passport");
 const users_service_1 = require("./users.service");
 const dto_1 = require("./dto");
 const decorators_1 = require("../../common/decorators");
+const guards_1 = require("../../common/guards");
 let UsersController = class UsersController {
     usersService;
     constructor(usersService) {
@@ -34,6 +35,12 @@ let UsersController = class UsersController {
     }
     async submitInvestorVerification(userId, dto) {
         return this.usersService.submitInvestorVerification(userId, dto);
+    }
+    async getPendingInvestors() {
+        return this.usersService.getPendingInvestors();
+    }
+    async verifyInvestor(userId, approved) {
+        return this.usersService.verifyInvestor(userId, approved);
     }
 };
 exports.UsersController = UsersController;
@@ -68,6 +75,22 @@ __decorate([
     __metadata("design:paramtypes", [String, dto_1.InvestorVerificationDto]),
     __metadata("design:returntype", Promise)
 ], UsersController.prototype, "submitInvestorVerification", null);
+__decorate([
+    (0, common_1.Get)('admin/pending-investors'),
+    (0, common_1.UseGuards)(guards_1.AdminGuard),
+    __metadata("design:type", Function),
+    __metadata("design:paramtypes", []),
+    __metadata("design:returntype", Promise)
+], UsersController.prototype, "getPendingInvestors", null);
+__decorate([
+    (0, common_1.Patch)('admin/verify-investor/:userId'),
+    (0, common_1.UseGuards)(guards_1.AdminGuard),
+    __param(0, (0, common_1.Param)('userId')),
+    __param(1, (0, common_1.Body)('approved')),
+    __metadata("design:type", Function),
+    __metadata("design:paramtypes", [String, Boolean]),
+    __metadata("design:returntype", Promise)
+], UsersController.prototype, "verifyInvestor", null);
 exports.UsersController = UsersController = __decorate([
     (0, common_1.Controller)('users'),
     (0, common_1.UseGuards)((0, passport_1.AuthGuard)('jwt')),
