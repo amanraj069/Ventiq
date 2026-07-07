@@ -58,4 +58,26 @@ export declare class UsersService {
             accreditationDeclared?: boolean;
         } | undefined;
     }>;
+    getPendingInvestors(): Promise<{
+        userId: string;
+        name: string;
+        email: string;
+        picture: string | undefined;
+        investorProfile: {
+            investorType?: string;
+            checkSizeMin?: number;
+            checkSizeMax?: number;
+            sectors?: string[];
+            linkedinUrl?: string;
+            accreditationDeclared?: boolean;
+        } | undefined;
+        investorVerificationStatus: string | undefined;
+        createdAt: Date | undefined;
+    }[]>;
+    verifyInvestor(userId: string, approved: boolean): Promise<{
+        userId: string;
+        name: string;
+        email: string;
+        investorVerificationStatus: string;
+    }>;
 }

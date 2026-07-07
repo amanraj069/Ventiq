@@ -17,8 +17,11 @@ let Interest = class Interest extends mongoose_2.Document {
     interestId;
     ideaId;
     investorId;
+    founderId;
     status;
     message;
+    createdAt;
+    updatedAt;
 };
 exports.Interest = Interest;
 __decorate([
@@ -34,7 +37,11 @@ __decorate([
     __metadata("design:type", String)
 ], Interest.prototype, "investorId", void 0);
 __decorate([
-    (0, mongoose_1.Prop)({ enum: ['pending', 'accepted', 'rejected'], default: 'pending' }),
+    (0, mongoose_1.Prop)({ required: true }),
+    __metadata("design:type", String)
+], Interest.prototype, "founderId", void 0);
+__decorate([
+    (0, mongoose_1.Prop)({ enum: ['pending', 'approved', 'declined'], default: 'pending' }),
     __metadata("design:type", String)
 ], Interest.prototype, "status", void 0);
 __decorate([

@@ -124,6 +124,40 @@ let UsersService = UsersService_1 = class UsersService {
             investorProfile: updated.investorProfile,
         };
     }
+    async getPendingInvestors() {
+        const users = await this.userModel
+            .find({ role: 'investor', investorVerificationStatus: 'pending' })
+            .sort({ createdAt: -1 })
+            .lean()
+            .exec();
+        return users.map((u) => ({
+            userId: u.userId,
+            name: u.name,
+            email: u.email,
+            picture: u.picture,
+            investorProfile: u.investorProfile,
+            investorVerificationStatus: u.investorVerificationStatus,
+            createdAt: u.createdAt,
+        }));
+    }
+    async verifyInvestor(userId, approved) {
+        const user = await this.userModel.findOne({ userId }).exec();
+        if (!user) {
+            throw new common_1.NotFoundException('User not found');
+        }
+        if (user.role !== 'investor') {
+            throw new common_1.BadRequestException('User is not an investor');
+        }
+        user.investorVerificationStatus = approved ? 'verified' : 'rejected';
+        await user.save();
+        this.logger.log(`Investor ${user.email} ${approved ? 'verified' : 'rejected'}`);
+        return {
+            userId: user.userId,
+            name: user.name,
+            email: user.email,
+            investorVerificationStatus: user.investorVerificationStatus,
+        };
+    }
 };
 exports.UsersService = UsersService;
 exports.UsersService = UsersService = UsersService_1 = __decorate([

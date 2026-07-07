@@ -10,6 +10,7 @@ import { AppService } from './app.service';
 
 import { BullModule } from '@nestjs/bullmq';
 import { EvaluationModule } from './modules/evaluation/evaluation.module';
+import { InterestModule } from './modules/interest/interest.module';
 
 @Module({
   imports: [
@@ -35,6 +36,7 @@ import { EvaluationModule } from './modules/evaluation/evaluation.module';
     UsersModule,
     IdeasModule,
     EvaluationModule,
+    InterestModule,
   ],
   controllers: [AppController],
   providers: [AppService],

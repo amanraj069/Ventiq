@@ -4,12 +4,14 @@ import {
   Patch,
   Post,
   Body,
+  Param,
   UseGuards,
 } from '@nestjs/common';
 import { AuthGuard } from '@nestjs/passport';
 import { UsersService } from './users.service';
 import { SetRoleDto, FounderProfileDto, InvestorVerificationDto } from './dto';
 import { CurrentUser } from '../../common/decorators';
+import { AdminGuard } from '../../common/guards';
 
 @Controller('users')
 @UseGuards(AuthGuard('jwt'))
@@ -55,5 +57,28 @@ export class UsersController {
     @Body() dto: InvestorVerificationDto,
   ) {
     return this.usersService.submitInvestorVerification(userId, dto);
+  }
+
+  // ── Admin Endpoints ──
+
+  /**
+   * GET /api/users/admin/pending-investors — List pending investor verifications.
+   */
+  @Get('admin/pending-investors')
+  @UseGuards(AdminGuard)
+  async getPendingInvestors() {
+    return this.usersService.getPendingInvestors();
+  }
+
+  /**
+   * PATCH /api/users/admin/verify-investor/:userId — Approve or reject investor.
+   */
+  @Patch('admin/verify-investor/:userId')
+  @UseGuards(AdminGuard)
+  async verifyInvestor(
+    @Param('userId') userId: string,
+    @Body('approved') approved: boolean,
+  ) {
+    return this.usersService.verifyInvestor(userId, approved);
   }
 }

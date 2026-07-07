@@ -3,12 +3,12 @@ import { Job } from 'bullmq';
 import { Model } from 'mongoose';
 import { Idea } from '../../database/schemas/idea.schema';
 import { Evaluation } from '../../database/schemas/evaluation.schema';
-import { MarketResearchAgent } from './agents/market-research.agent';
+import { PipelineOrchestrator } from './pipeline.orchestrator';
 export declare class EvaluationProcessor extends WorkerHost {
     private ideaModel;
     private evaluationModel;
-    private marketResearchAgent;
+    private pipelineOrchestrator;
     private readonly logger;
-    constructor(ideaModel: Model<Idea>, evaluationModel: Model<Evaluation>, marketResearchAgent: MarketResearchAgent);
+    constructor(ideaModel: Model<Idea>, evaluationModel: Model<Evaluation>, pipelineOrchestrator: PipelineOrchestrator);
     process(job: Job<any, any, string>): Promise<any>;
 }

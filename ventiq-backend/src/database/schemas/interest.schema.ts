@@ -11,13 +11,19 @@ export class Interest extends Document {
   ideaId: string;
 
   @Prop({ required: true })
-  investorId: string; // references userId
+  investorId: string;
 
-  @Prop({ enum: ['pending', 'accepted', 'rejected'], default: 'pending' })
+  @Prop({ required: true })
+  founderId: string;
+
+  @Prop({ enum: ['pending', 'approved', 'declined'], default: 'pending' })
   status: string;
 
   @Prop()
   message?: string;
+
+  createdAt?: Date;
+  updatedAt?: Date;
 }
 
 export const InterestSchema = SchemaFactory.createForClass(Interest);

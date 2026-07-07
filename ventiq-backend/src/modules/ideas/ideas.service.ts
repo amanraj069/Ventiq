@@ -97,4 +97,87 @@ export class IdeasService {
     // Optionally fetch full idea details from DB, but metadata has title
     return similarMatches;
   }
+
+  /**
+   * Explore feed for investors — returns evaluated ideas with basic info.
+   */
+  async getExploreFeed(filters?: { domain?: string; minScore?: number; sort?: string }) {
+    const query: any = { status: 'evaluated' };
+    if (filters?.domain) {
+      query.domain = { $regex: new RegExp(filters.domain, 'i') };
+    }
+
+    const ideas = await this.ideaModel
+      .find(query)
+      .sort({ createdAt: -1 })
+      .lean()
+      .exec();
+
+    // Get evaluation scores for all these ideas
+    const ideaIds = ideas.map((i) => i.ideaId);
+    const evaluations = await Promise.all(
+      ideaIds.map((id) => this.evaluationService.getEvaluationByIdeaId(id)),
+    );
+    const evalMap = new Map(
+      evaluations.filter(Boolean).map((e) => [e!.ideaId, e!]),
+    );
+
+    let results = ideas.map((idea) => {
+      const evaluation = evalMap.get(idea.ideaId);
+      return {
+        ideaId: idea.ideaId,
+        title: idea.title,
+        oneLinePitch: idea.oneLinePitch,
+        domain: idea.domain,
+        targetMarket: idea.targetMarket,
+        overallScore: evaluation?.overallScore ?? null,
+        createdAt: idea.createdAt,
+      };
+    });
+
+    // Filter by minScore
+    if (filters?.minScore) {
+      results = results.filter((r) => (r.overallScore ?? 0) >= filters.minScore!);
+    }
+
+    // Sort
+    if (filters?.sort === 'score') {
+      results.sort((a, b) => (b.overallScore ?? 0) - (a.overallScore ?? 0));
+    }
+
+    return results;
+  }
+
+  /**
+   * Investor-facing idea view — returns full breakdown only if approved.
+   */
+  async getExploreIdea(ideaId: string, investorId: string, interestStatus?: string | null) {
+    const idea = await this.ideaModel.findOne({ ideaId }).lean().exec();
+    if (!idea) {
+      throw new NotFoundException('Idea not found');
+    }
+
+    const evaluation = await this.evaluationService.getEvaluationByIdeaId(ideaId);
+
+    // Base response (always visible)
+    const base: any = {
+      ideaId: idea.ideaId,
+      title: idea.title,
+      oneLinePitch: idea.oneLinePitch,
+      domain: idea.domain,
+      targetMarket: idea.targetMarket,
+      description: idea.description,
+      overallScore: evaluation?.overallScore ?? null,
+      createdAt: idea.createdAt,
+      isBreakdownUnlocked: interestStatus === 'approved',
+      interestStatus: interestStatus || null,
+    };
+
+    // If investor has approved interest, include full breakdown
+    if (interestStatus === 'approved' && evaluation) {
+      base.evaluation = evaluation.toJSON();
+    }
+
+    return base;
+  }
 }

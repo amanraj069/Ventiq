@@ -22,7 +22,7 @@ export class User extends Document {
   @Prop()
   picture?: string;
 
-  @Prop({ enum: ['founder', 'investor', null], default: null })
+  @Prop({ enum: ['founder', 'investor', 'admin', null], default: null })
   role?: string;
 
   @Prop({ default: false })
