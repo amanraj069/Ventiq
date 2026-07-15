@@ -51,6 +51,15 @@ export class User extends Document {
   @Prop({ enum: ['free', 'pro'], default: 'free' })
   tier: string;
 
+  @Prop()
+  razorpayCustomerId?: string;
+
+  @Prop()
+  razorpaySubscriptionId?: string;
+
+  @Prop()
+  razorpayCurrentPeriodEnd?: Date;
+
   createdAt?: Date;
   updatedAt?: Date;
 }

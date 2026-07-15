@@ -330,63 +330,78 @@ function MobileTopbar({ onMenuClick }: { onMenuClick: () => void }) {
 
 // ── Main Shell ──
 export function AppShell({ children }: { children: React.ReactNode }) {
- const { data: session } = useSession();
- const [user, setUser] = useState<UserInfo | null>(null);
- const [collapsed, setCollapsed] = useState(false);
- const [mobileOpen, setMobileOpen] = useState(false);
- const pathname = usePathname();
+  const { data: session, status } = useSession();
+  const [user, setUser] = useState<UserInfo | null>(null);
+  const [collapsed, setCollapsed] = useState(false);
+  const [mobileOpen, setMobileOpen] = useState(false);
+  const pathname = usePathname();
+  const router = useRouter();
 
- // Close mobile drawer on route change
- useEffect(() => {
- setMobileOpen(false);
- }, [pathname]);
+  // Auth guard: redirect unauthenticated users
+  useEffect(() => {
+    if (status === 'unauthenticated') {
+      router.replace('/sign-in');
+    }
+  }, [status, router]);
 
- // Fetch user info
- useEffect(() => {
- if (session?.accessToken) {
- apiFetch<UserInfo>('/api/users/me')
- .then(setUser)
- .catch(() => {});
- }
- }, [session?.accessToken]);
+  // Close mobile drawer on route change
+  useEffect(() => {
+    setMobileOpen(false);
+  }, [pathname]);
 
- // Restore collapse state from localStorage
- useEffect(() => {
- const saved = localStorage.getItem('ventiq-sidebar-collapsed');
- if (saved === 'true') setCollapsed(true);
- }, []);
+  // Fetch user info
+  useEffect(() => {
+    if (session?.accessToken) {
+      apiFetch<UserInfo>('/api/users/me')
+        .then(setUser)
+        .catch(() => {});
+    }
+  }, [session?.accessToken]);
 
- useEffect(() => {
- localStorage.setItem('ventiq-sidebar-collapsed', String(collapsed));
- }, [collapsed]);
+  // Restore collapse state from localStorage
+  useEffect(() => {
+    const saved = localStorage.getItem('ventiq-sidebar-collapsed');
+    if (saved === 'true') setCollapsed(true);
+  }, []);
 
- return (
- <ShellContext.Provider value={{ user, collapsed }}>
- <div className="min-h-screen bg-bg text-fg">
- {/* Desktop Sidebar */}
- <Sidebar user={user} collapsed={collapsed} setCollapsed={setCollapsed} />
+  useEffect(() => {
+    localStorage.setItem('ventiq-sidebar-collapsed', String(collapsed));
+  }, [collapsed]);
 
- {/* Mobile Topbar */}
- <MobileTopbar onMenuClick={() => setMobileOpen(true)} />
+  // Show spinner while checking auth or redirecting
+  if (status === 'loading' || status === 'unauthenticated') {
+    return (
+      <div className="min-h-screen bg-bg flex items-center justify-center">
+        <div className="w-6 h-6 border-2 border-border border-t-fg rounded-full animate-spin" />
+      </div>
+    );
+  }
 
- {/* Mobile Drawer */}
- <MobileDrawer open={mobileOpen} onClose={() => setMobileOpen(false)} user={user} />
+  return (
+    <ShellContext.Provider value={{ user, collapsed }}>
+      <div className="min-h-screen bg-bg text-fg">
+        {/* Desktop Sidebar */}
+        <Sidebar user={user} collapsed={collapsed} setCollapsed={setCollapsed} />
 
- {/* Content area */}
- <main
- className={`transition-all duration-300 ease-[cubic-bezier(0.16,1,0.3,1)] ${
- collapsed ? 'md:ml-[68px]' : 'md:ml-[240px]'
- } pt-14 md:pt-0`}
- >
- <div className="relative min-h-screen">
- {/* Subtle background ambience */}
- 
- <div className="relative z-10 max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 py-8 md:py-12">
- {children}
- </div>
- </div>
- </main>
- </div>
- </ShellContext.Provider>
- );
+        {/* Mobile Topbar */}
+        <MobileTopbar onMenuClick={() => setMobileOpen(true)} />
+
+        {/* Mobile Drawer */}
+        <MobileDrawer open={mobileOpen} onClose={() => setMobileOpen(false)} user={user} />
+
+        {/* Content area */}
+        <main
+          className={`transition-all duration-300 ease-[cubic-bezier(0.16,1,0.3,1)] ${
+            collapsed ? 'md:ml-[68px]' : 'md:ml-[240px]'
+          } pt-14 md:pt-0`}
+        >
+          <div className="relative min-h-screen">
+            <div className="relative z-10 max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 py-8 md:py-12">
+              {children}
+            </div>
+          </div>
+        </main>
+      </div>
+    </ShellContext.Provider>
+  );
 }

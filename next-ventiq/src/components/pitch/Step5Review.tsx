@@ -31,9 +31,24 @@ export function Step5Review() {
  // Ideally go to /ideas/[ideaId] once we build it, but /ideas works for now
  router.push('/ideas');
  }
- } catch (error) {
+ } catch (error: any) {
  console.error(error);
+ if (error.message === 'UPGRADE_REQUIRED') {
+ toast(
+ (t) => (
+ <div className="flex flex-col gap-2">
+ <span className="font-medium text-fg">Free Limit Reached</span>
+ <span className="text-sm text-fg-muted">You have reached your 1 evaluation per month limit on the Free plan.</span>
+ <Button size="sm" onClick={() => { toast.dismiss(t.id); router.push('/upgrade'); }}>
+ Upgrade to Pro
+ </Button>
+ </div>
+ ),
+ { duration: 8000 }
+ );
+ } else {
  toast.error('Failed to submit idea. Please try again.');
+ }
  } finally {
  setIsSubmitting(false);
  }

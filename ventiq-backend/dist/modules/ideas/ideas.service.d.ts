@@ -1,14 +1,16 @@
 import { Model } from 'mongoose';
 import { Idea } from '../../database/schemas/idea.schema';
+import { User } from '../../database/schemas/user.schema';
 import { CreateIdeaDto } from './dto/create-idea.dto';
 import { EvaluationService } from '../evaluation/evaluation.service';
 import { PineconeService } from '../pinecone/pinecone.service';
 export declare class IdeasService {
     private ideaModel;
+    private userModel;
     private evaluationService;
     private pineconeService;
     private readonly logger;
-    constructor(ideaModel: Model<Idea>, evaluationService: EvaluationService, pineconeService: PineconeService);
+    constructor(ideaModel: Model<Idea>, userModel: Model<User>, evaluationService: EvaluationService, pineconeService: PineconeService);
     create(founderId: string, createIdeaDto: CreateIdeaDto): Promise<Idea>;
     findAllByFounder(founderId: string): Promise<Idea[]>;
     findOne(ideaId: string, founderId: string): Promise<any>;

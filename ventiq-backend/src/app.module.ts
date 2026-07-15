@@ -11,6 +11,7 @@ import { AppService } from './app.service';
 import { BullModule } from '@nestjs/bullmq';
 import { EvaluationModule } from './modules/evaluation/evaluation.module';
 import { InterestModule } from './modules/interest/interest.module';
+import { BillingModule } from './modules/billing/billing.module';
 
 @Module({
   imports: [
@@ -37,6 +38,7 @@ import { InterestModule } from './modules/interest/interest.module';
     IdeasModule,
     EvaluationModule,
     InterestModule,
+    BillingModule,
   ],
   controllers: [AppController],
   providers: [AppService],
