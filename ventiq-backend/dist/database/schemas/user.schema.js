@@ -26,6 +26,9 @@ let User = class User extends mongoose_2.Document {
     investorProfile;
     founderProfile;
     tier;
+    razorpayCustomerId;
+    razorpaySubscriptionId;
+    razorpayCurrentPeriodEnd;
     createdAt;
     updatedAt;
 };
@@ -78,6 +81,18 @@ __decorate([
     (0, mongoose_1.Prop)({ enum: ['free', 'pro'], default: 'free' }),
     __metadata("design:type", String)
 ], User.prototype, "tier", void 0);
+__decorate([
+    (0, mongoose_1.Prop)(),
+    __metadata("design:type", String)
+], User.prototype, "razorpayCustomerId", void 0);
+__decorate([
+    (0, mongoose_1.Prop)(),
+    __metadata("design:type", String)
+], User.prototype, "razorpaySubscriptionId", void 0);
+__decorate([
+    (0, mongoose_1.Prop)(),
+    __metadata("design:type", Date)
+], User.prototype, "razorpayCurrentPeriodEnd", void 0);
 exports.User = User = __decorate([
     (0, mongoose_1.Schema)({ timestamps: true })
 ], User);

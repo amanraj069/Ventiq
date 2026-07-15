@@ -18,19 +18,38 @@ const common_1 = require("@nestjs/common");
 const mongoose_1 = require("@nestjs/mongoose");
 const mongoose_2 = require("mongoose");
 const idea_schema_1 = require("../../database/schemas/idea.schema");
+const user_schema_1 = require("../../database/schemas/user.schema");
 const evaluation_service_1 = require("../evaluation/evaluation.service");
 const pinecone_service_1 = require("../pinecone/pinecone.service");
 let IdeasService = IdeasService_1 = class IdeasService {
     ideaModel;
+    userModel;
     evaluationService;
     pineconeService;
     logger = new common_1.Logger(IdeasService_1.name);
-    constructor(ideaModel, evaluationService, pineconeService) {
+    constructor(ideaModel, userModel, evaluationService, pineconeService) {
         this.ideaModel = ideaModel;
+        this.userModel = userModel;
         this.evaluationService = evaluationService;
         this.pineconeService = pineconeService;
     }
     async create(founderId, createIdeaDto) {
+        const user = await this.userModel.findOne({ userId: founderId });
+        if (!user) {
+            throw new common_1.NotFoundException('User not found');
+        }
+        if (user.tier === 'free') {
+            const startOfMonth = new Date();
+            startOfMonth.setDate(1);
+            startOfMonth.setHours(0, 0, 0, 0);
+            const ideasThisMonth = await this.ideaModel.countDocuments({
+                founderId,
+                createdAt: { $gte: startOfMonth },
+            });
+            if (ideasThisMonth >= 1) {
+                throw new common_1.ForbiddenException('UPGRADE_REQUIRED');
+            }
+        }
         const newIdea = await this.ideaModel.create({
             founderId,
             status: 'submitted',
@@ -149,7 +168,9 @@ exports.IdeasService = IdeasService;
 exports.IdeasService = IdeasService = IdeasService_1 = __decorate([
     (0, common_1.Injectable)(),
     __param(0, (0, mongoose_1.InjectModel)(idea_schema_1.Idea.name)),
+    __param(1, (0, mongoose_1.InjectModel)(user_schema_1.User.name)),
     __metadata("design:paramtypes", [mongoose_2.Model,
+        mongoose_2.Model,
         evaluation_service_1.EvaluationService,
         pinecone_service_1.PineconeService])
 ], IdeasService);

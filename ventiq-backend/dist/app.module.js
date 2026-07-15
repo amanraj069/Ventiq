@@ -19,6 +19,7 @@ const app_service_1 = require("./app.service");
 const bullmq_1 = require("@nestjs/bullmq");
 const evaluation_module_1 = require("./modules/evaluation/evaluation.module");
 const interest_module_1 = require("./modules/interest/interest.module");
+const billing_module_1 = require("./modules/billing/billing.module");
 let AppModule = class AppModule {
 };
 exports.AppModule = AppModule;
@@ -48,6 +49,7 @@ exports.AppModule = AppModule = __decorate([
             ideas_module_1.IdeasModule,
             evaluation_module_1.EvaluationModule,
             interest_module_1.InterestModule,
+            billing_module_1.BillingModule,
         ],
         controllers: [app_controller_1.AppController],
         providers: [app_service_1.AppService],

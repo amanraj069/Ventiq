@@ -12,6 +12,7 @@ const mongoose_1 = require("@nestjs/mongoose");
 const ideas_controller_1 = require("./ideas.controller");
 const ideas_service_1 = require("./ideas.service");
 const idea_schema_1 = require("../../database/schemas/idea.schema");
+const user_schema_1 = require("../../database/schemas/user.schema");
 const evaluation_module_1 = require("../evaluation/evaluation.module");
 const pinecone_module_1 = require("../pinecone/pinecone.module");
 const interest_module_1 = require("../interest/interest.module");
@@ -21,7 +22,10 @@ exports.IdeasModule = IdeasModule;
 exports.IdeasModule = IdeasModule = __decorate([
     (0, common_1.Module)({
         imports: [
-            mongoose_1.MongooseModule.forFeature([{ name: idea_schema_1.Idea.name, schema: idea_schema_1.IdeaSchema }]),
+            mongoose_1.MongooseModule.forFeature([
+                { name: idea_schema_1.Idea.name, schema: idea_schema_1.IdeaSchema },
+                { name: user_schema_1.User.name, schema: user_schema_1.UserSchema },
+            ]),
             evaluation_module_1.EvaluationModule,
             pinecone_module_1.PineconeModule,
             interest_module_1.InterestModule,

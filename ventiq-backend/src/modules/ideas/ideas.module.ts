@@ -3,13 +3,17 @@ import { MongooseModule } from '@nestjs/mongoose';
 import { IdeasController } from './ideas.controller';
 import { IdeasService } from './ideas.service';
 import { Idea, IdeaSchema } from '../../database/schemas/idea.schema';
+import { User, UserSchema } from '../../database/schemas/user.schema';
 import { EvaluationModule } from '../evaluation/evaluation.module';
 import { PineconeModule } from '../pinecone/pinecone.module';
 import { InterestModule } from '../interest/interest.module';
 
 @Module({
   imports: [
-    MongooseModule.forFeature([{ name: Idea.name, schema: IdeaSchema }]),
+    MongooseModule.forFeature([
+      { name: Idea.name, schema: IdeaSchema },
+      { name: User.name, schema: UserSchema },
+    ]),
     EvaluationModule,
     PineconeModule,
     InterestModule,

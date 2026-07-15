@@ -1,7 +1,8 @@
-import { Injectable, Logger, NotFoundException } from '@nestjs/common';
+import { Injectable, Logger, NotFoundException, ForbiddenException } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
 import { Model } from 'mongoose';
 import { Idea } from '../../database/schemas/idea.schema';
+import { User } from '../../database/schemas/user.schema';
 import { CreateIdeaDto } from './dto/create-idea.dto';
 import { EvaluationService } from '../evaluation/evaluation.service';
 import { PineconeService } from '../pinecone/pinecone.service';
@@ -12,11 +13,32 @@ export class IdeasService {
 
   constructor(
     @InjectModel(Idea.name) private ideaModel: Model<Idea>,
+    @InjectModel(User.name) private userModel: Model<User>,
     private evaluationService: EvaluationService,
     private pineconeService: PineconeService,
   ) {}
 
   async create(founderId: string, createIdeaDto: CreateIdeaDto): Promise<Idea> {
+    const user = await this.userModel.findOne({ userId: founderId });
+    if (!user) {
+      throw new NotFoundException('User not found');
+    }
+
+    if (user.tier === 'free') {
+      const startOfMonth = new Date();
+      startOfMonth.setDate(1);
+      startOfMonth.setHours(0, 0, 0, 0);
+
+      const ideasThisMonth = await this.ideaModel.countDocuments({
+        founderId,
+        createdAt: { $gte: startOfMonth },
+      });
+
+      if (ideasThisMonth >= 1) {
+        throw new ForbiddenException('UPGRADE_REQUIRED'); // Specific message for frontend interception
+      }
+    }
+
     const newIdea = await this.ideaModel.create({
       founderId,
       status: 'submitted', // Setting to submitted to match step 5
